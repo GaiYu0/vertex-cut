@@ -1,13 +1,31 @@
+import networkx as nx
 import numpy as np
 import torch as th
 
-def sp2th(coo):
+
+def onehot(x, d):
     """
     Parameters
     ----------
-    coo : scipy.sparse.coo.coo_matrix
+    x : (n,) or (n, 1)
     """
 
-    row = np.reshape(coo.row, (1, -1))
-    col = np.reshape(coo.col, (1, -1))
-    idx = th.from_numpy(np.vstack((row, col))).long()
+    x = x.unsqueeze(1) if x.dim() == 1 else x
+    ret = th.zeros(x.size(0), d)
+    is_cuda = x.is_cuda
+    x = x.cpu()
+    ret.scatter_(1, x, 1)
+    return ret.cuda() if is_cuda else ret
+
+
+def read_edgelist(f):
+    g = nx.read_edgelist(f, nodetype=int)
+    nodes = list(g.nodes())
+    if g.number_of_nodes() < max(g.nodes()) - min(g.nodes()) + 1:
+        nodes.sort()
+        idx = np.where(np.array(nodes[:-1]) + 1 != np.array(nodes[1:]))[0]
+        for i in idx:
+            i = int(i)
+            for n in range(nodes[i], nodes[i + 1]):
+                g.add_node(n)
+    return g
