@@ -1,6 +1,13 @@
 import networkx as nx
 import numpy as np
-import torch as th
+import tensorflow as tf
+# import torch as th
+
+
+def sparse_sp2tf(matrix):
+    coo = matrix.tocoo()
+    idx = [[i, j] for i, j in zip(coo.row, coo.col)]
+    return tf.SparseTensor(idx, coo.data.tolist(), coo.shape)
 
 
 def sparse_sp2th(matrix):
@@ -27,7 +34,7 @@ def onehot(x, d):
 
 
 def read_edgelist(f):
-    g = nx.read_edgelist(f, nodetype=int)
+    g = nx.read_edgelist(f, nodetype=int) # by default undirected
     nodes = list(g.nodes())
     if g.number_of_nodes() < max(g.nodes()) - min(g.nodes()) + 1:
         nodes.sort()
