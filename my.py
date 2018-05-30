@@ -33,8 +33,10 @@ def onehot(x, d):
     return ret.cuda() if is_cuda else ret
 
 
-def read_edgelist(f):
-    g = nx.read_edgelist(f, nodetype=int) # by default undirected
+def read_edgelist(f, create_using=None):
+    if create_using is None:
+        create_using = nx.Graph()
+    g = nx.read_edgelist(f, create_using=create_using, nodetype=int)
     nodes = list(g.nodes())
     if g.number_of_nodes() < max(g.nodes()) - min(g.nodes()) + 1:
         nodes.sort()
