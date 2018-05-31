@@ -1,6 +1,11 @@
+"""
+Minjie's code
+"""
+
 from __future__ import division
 
 from collections import namedtuple
+import math
 import numpy as np
 import scipy.sparse as sp
 import networkx as nx
@@ -78,8 +83,14 @@ class Partitioner(object):
                         vloads[k] += 1
         for e in range(self.num_edges):
             eloads[self.eassign[e]] += 1
-        print('#Verts:', vloads)
-        print('#Edges:', eloads)
+
+        def entropy(x_list):
+            z = sum(x_list)
+            p_list = [x / z for x in x_list]
+            return -sum(p * math.log(p) for p in p_list)
+
+        print('#Verts:', vloads, entropy(vloads))
+        print('#Edges:', eloads, entropy(eloads))
         num_cross_edges = 0
         for i, (u, v) in enumerate(zip(self.adj.row, self.adj.col)):
             if ecut_flag:
