@@ -17,7 +17,7 @@ import networkx as nx
 import sbm
 import partition as pttn
 
-K = 4
+K = 10
 N = 1000
 rng = np.random.RandomState(42)
 

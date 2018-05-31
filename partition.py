@@ -88,10 +88,10 @@ class Partitioner(object):
             else:
                 k = self.eassign[i]
                 if self.vassign[u, k] != 1 or self.vassign[v, k] != 1:
-                    print('Edge', i, 'u', u, 'v', v)
-                    print(k, self.vassign[u,:], self.vassign[v,:])
+#                   print('Edge', i, 'u', u, 'v', v)
+#                   print(k, self.vassign[u,:], self.vassign[v,:])
                     num_cross_edges += 1
-        print('#Cross-edges:', num_cross_edges)
+#       print('#Cross-edges:', num_cross_edges)
         if ecut_flag:
             num_vert_rep = [0 for i in range(self.num_nodes)]
         else:
