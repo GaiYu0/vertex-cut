@@ -4,11 +4,6 @@ import tensorflow as tf
 # import torch as th
 
 
-config = tf.ConfigProto()
-config.gpu_options.allow_growth=True
-tf.enable_eager_execution(config)
-
-
 def read_edgelist(f, create_using=None):
     if create_using is None:
         create_using = nx.Graph()
