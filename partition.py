@@ -239,7 +239,7 @@ class GreedyVertexCut(Partitioner):
         self.vassign = np.zeros((self.graph.number_of_nodes(), self.K), dtype=np.int32)
         self.eassign = np.zeros((self.graph.number_of_edges(),), dtype=np.int32)
         loads = [0 for _ in range(self.K)]
-        unassigned = [d for _, d in self.graph.degree().items()]
+        unassigned = [d for _, d in self.graph.degree()]
         edge_order = list(range(self.graph.number_of_edges()))
         self.rng.shuffle(edge_order)
         edges = list(self.graph.edges())

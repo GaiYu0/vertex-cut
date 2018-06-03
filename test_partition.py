@@ -35,7 +35,7 @@ import sys
 import my
 
 path = 'data/' + sys.argv[1]
-g = my.read_edgelist(path, nx.DiGraph())
+g = my.read_edgelist(path, fill=True).to_directed()
 
 print('#Total verts:', g.number_of_nodes())
 print('#Total edges:', g.number_of_edges())
