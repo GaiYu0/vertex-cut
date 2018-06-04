@@ -29,8 +29,8 @@ tf.enable_eager_execution(config)
 '''
 args = argparse.Namespace()
 args.depth = 10
-args.device = '/cpu:0'
-# args.device = '/device:GPU:0'
+# args.device = '/cpu:0'
+args.device = '/device:GPU:0'
 args.graph = 'soc-Epinions1'
 # args.graph = 'soc-Slashdot0811'
 # args.graph = 'soc-Slashdot0902'
@@ -44,7 +44,7 @@ args.radius = 3
 '''
 
 parser = argparse.ArgumentParser()
-parser.add_argument('--depth', type=int, default=30)
+parser.add_argument('--depth', type=int, default=10)
 parser.add_argument('--device', type=str, default='/cpu:0')
 parser.add_argument('--graph', type=str, default='soc-Epinions1')
 parser.add_argument('--lambda_node', type=float, default=1)
@@ -57,7 +57,7 @@ parser.add_argument('--radius', type=int, default=3)
 args = parser.parse_args()
 
 keys = sorted(vars(args).keys())
-run_id = '-'.join('%s-%s' % (key, str(getattr(args, key))) for key in keys if key != 'device')
+run_id = 'ipynb' + '-'.join('%s-%s' % (key, str(getattr(args, key))) for key in keys if key != 'device')
 writer = tf.contrib.summary.create_file_writer('runs/' + run_id)
 writer.set_as_default()
 
@@ -104,6 +104,7 @@ with tf.device(args.device):
             optimizer.apply_gradients(zip(gradients, gnn.variables), global_step=tf.train.get_or_create_global_step())
 
             r, b_node, b_edge, entropy = objective(z)
+            rslt = r + args.lambda_node * b_node + args.lambda_edge * b_edge + args.lambda_entropy * entropy
             print('[iteration %d]%f %f %f %f %f' % (i + 1, rslt, r, b_node, b_edge, entropy))
             tf.contrib.summary.scalar('objective', rslt)
             tf.contrib.summary.scalar('replication-factor', r)
