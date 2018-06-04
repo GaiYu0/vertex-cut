@@ -17,16 +17,20 @@ class Objective:
         self.n_machines = n_machines
         self.lambda_node, self.lambda_edge, self.lambda_entropy = lambda_node, lambda_edge, lambda_entropy
 
-    def __call__(self, x, training=False):
-        # TODO incorporate extent of concentration in objective
+    def __call__(self, x, training=False, probability=False):
         # TODO return expected number of edges per machine
 
-        p = tf.nn.softmax(x)
-        log_p = tf.nn.log_softmax(x)
+        if probability:
+            p = x
+            log_p = tf.log(p + 1e-10)
+        else:
+            p = tf.nn.softmax(x)
+            log_p = tf.nn.log_softmax(x)
+
         entropy = -tf.reduce_sum(p * log_p) / float(self.n_edges)
         
         if training:
-            y = tf.multinomial(p, num_samples=1)
+            y = tf.multinomial(log_p, num_samples=1)
             y = tf.squeeze(y)
             y = tf.one_hot(y, self.n_machines)
         else:

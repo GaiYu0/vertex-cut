@@ -14,6 +14,7 @@ import snap_utils
 
 import numpy as np
 import networkx as nx
+import scipy as sp
 import sbm
 import partition as pttn
 
@@ -35,18 +36,21 @@ import sys
 import my
 
 path = 'data/' + sys.argv[1]
-g = my.read_edgelist(path, fill=True).to_directed()
+g = my.read_edgelist(path, fill=True)
 
 print('#Total verts:', g.number_of_nodes())
 print('#Total edges:', g.number_of_edges())
+
 adj = nx.adjacency_matrix(g)
+adj = sp.sparse.triu(adj)
+
 #print('Connected?', nx.is_connected(g))
 #gt = ssbm.node2comm
 #p = pttn.partition('random-edge-cut', g, K, rng, pprint=True)
 #p = pttn.partition('ingress-edge-cut', g, K, rng, pprint=True)
 #p = pttn.partition('egress-edge-cut', g, K, rng, pprint=True)
-#p = pttn.partition('random-vertex-cut', g, K, rng, pprint=True)
-p = pttn.partition('greedy-vertex-cut', g, K, rng, pprint=True)
+#p = pttn.partition('random-vertex-cut', adj, K, rng, pprint=True)
+p = pttn.partition('greedy-vertex-cut', adj, K, rng, pprint=True)
 #p = pttn.partition('oracle-random-edge', g, K, gt, rng, pprint=True)
 #p = pttn.partition('oracle-ingress-edge', g, K, gt, rng, pprint=True)
 #p = pttn.partition('oracle-egress-edge', g, K, gt, rng, pprint=True)
