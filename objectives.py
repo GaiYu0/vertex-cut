@@ -49,7 +49,8 @@ class Objective:
         b_edge = tf.reduce_sum(q_edge * tf.log(q_node))
 
         if training:
-#             joint = r
+            # TODO sampling multiple times
+            # TODO reward = overlapping between oracle and gnn; start from cross-entropy
             joint = r + self.lambda_node * b_node + self.lambda_edge * b_edge + self.lambda_entropy * entropy
             objective = joint * tf.reduce_sum(y * log_p) / float(self.n_edges)
             return objective, r, b_node, b_edge, entropy
