@@ -1,6 +1,6 @@
 import sys
 
-f = sys.argv[1]
+f = 'data/' + sys.argv[1]
 n_nodes = int(sys.argv[2])
 lines = open(f).readlines()
 for i, line in enumerate(lines):
@@ -14,4 +14,4 @@ for line in lines:
         break
     if int(n) < n_nodes:
         reduced.append(line)
-open(f + '-reduced', 'w').write(''.join(reduced))
+open('data/' + f + '-reduced', 'w').write(''.join(reduced))
