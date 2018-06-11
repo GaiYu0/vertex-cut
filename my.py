@@ -1,7 +1,16 @@
 import networkx as nx
 import numpy as np
 import tensorflow as tf
-# import torch as th
+
+
+def adj2p(adj):
+    n_nodes, n_edges = adj.shape[0], len(adj.data)
+    adj = tf.cast(sparse_sp2tf(adj), tf.float32)
+    e_idx = tf.expand_dims(tf.range(0, n_edges, dtype=tf.int64), 1)
+    idx0 = tf.concat((tf.expand_dims(adj.indices[:, 0], 1), e_idx), 1)
+    idx1 = tf.concat((tf.expand_dims(adj.indices[:, 1], 1), e_idx), 1)
+    idx = tf.concat((idx0, idx1), 0)
+    return tf.SparseTensor(idx, tf.ones(idx.shape[0]), dense_shape=(n_nodes, n_edges))
 
 
 def read_edgelist(f, connected=False, create_using=None, fill=False):
